@@ -44,6 +44,11 @@ ENV VLLM_TARGET_PLATFORM=tt
 ENV WH_ARCH_YAML=wormhole_b0_80_arch_eth_dispatch.yaml 
 ENV MESH_DEVICE=N300
 
+# Bootstrap rust (for tt-smi)
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+
+ARG CACHEBUST=1
+
 # clone tt-metal
 RUN git clone --depth=1 https://github.com/tenstorrent/tt-metal.git /tt-metal && \
     cd /tt-metal && \
@@ -53,9 +58,6 @@ RUN git clone --depth=1 https://github.com/tenstorrent/tt-metal.git /tt-metal &&
     cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/tt-metal/install -DTT_UNITY_BUILD=ON -DCMAKE_C_COMPILER=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/bin/g++-12 -G Ninja && \
     ninja && \
     ninja install
-    
-# Bootstrap rust (for tt-smi)
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 # create a virtual environment but comment out the "pip install --force-reinstall pip==21.2.4" line
 RUN . "$HOME/.cargo/env" && cd /tt-metal && \
@@ -67,10 +69,8 @@ RUN git clone -b dev --depth=1 https://github.com/tenstorrent/vllm.git /vllm && 
     cd /vllm && \
     . /tt-metal/python_env/bin/activate && \
     pip install --upgrade pip && \
-    pip install .
-
-RUN . /tt-metal/python_env/bin/activate && \
-    pip install numpy==1.26.4 
+    pip install . && \
+    pip install numpy==1.26.4
 
 # Cleanup
 RUN apt-get clean && \
