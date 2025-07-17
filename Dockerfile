@@ -79,7 +79,10 @@ RUN apt-get clean && \
     rm -rf /vllm/.git && \
     rm -rf /tt-metal/.git && \
     rm -rf /openmpi-5.0.7.tar.bz2 && \
-    rm -rf /openmpi-5.0.7
+    rm -rf /openmpi-5.0.7 && \
+    rm -rf /root/.cache && \
+    rm -rf /tt-metal/.cpmcache && \
+    rm -rf /vllm/.deps
 
 # Entry point that automatically activates the venv and spawns an interactive shell
 RUN cat <<EOF > /etc/entrypoint.sh
@@ -101,6 +104,7 @@ exec /bin/bash --login
 EOF
 
 RUN chmod +x /etc/entrypoint.sh
+EXPOSE 8000
 
 # start interactive shell by default inside venv
 ENTRYPOINT ["/etc/entrypoint.sh"]
