@@ -55,7 +55,7 @@ RUN git clone --depth=1 https://github.com/tenstorrent/tt-metal.git /tt-metal &&
     git submodule update --init --recursive && \
     mkdir build && \
     cd build && \
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/tt-metal/install -DTT_UNITY_BUILD=ON -DCMAKE_C_COMPILER=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/bin/g++-12 -G Ninja && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/tt-metal/install -DTT_UNITY_BUILDS=ON -DCMAKE_C_COMPILER=/usr/bin/gcc-12 -DCMAKE_CXX_COMPILER=/usr/bin/g++-12 -G Ninja && \
     ninja && \
     ninja install
 
